@@ -4,6 +4,8 @@
 import sys
 import matplotlib
 
+from pages import KaraokeHeroApp
+
 def menu():
     #put songs availible to sing here
     return
@@ -24,4 +26,5 @@ def result():
 
 
 if __name__ == '__main__':
-    pass
+    app = KaraokeHeroApp()
+    app.mainloop()
