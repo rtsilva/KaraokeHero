@@ -3,6 +3,7 @@ Karaoke Hero project for 6.835
 Libraries Used + Installation Requirements
 
 - python midi - run pip install git+https://github.com/vishnubob/python-midi@feature/python3
+- python audiolazy - run pip install audiolazy
 
 - python pyaudio - run the following commands: - $ brew install portaudio
 		- $ pip install pyaudio
