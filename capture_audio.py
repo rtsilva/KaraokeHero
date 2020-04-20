@@ -1,43 +1,45 @@
+"""
+PyAudio Example: Make a wire between input and output (i.e., record a
+few samples and play them back immediately).
+
+This is the callback (non-blocking) version.
+"""
 import pyaudio
 import wave
-
-#take in audio, return
-#pls be in realtime :(
+import time
+import struct
 
 CHUNK = 1024
-FORMAT = pyaudio.paInt16
+FORMAT = pyaudio.paFloat32
+WIDTH = 2
 CHANNELS = 1
 RATE = 44100
-RECORD_SECONDS = 5
-WAVE_OUTPUT_FILENAME = "output.wav"
 
+# instantiate PyAudio
 p = pyaudio.PyAudio()
 
+def callback(in_data, frame_count, time_info, status):
+    # print(struct.unpack(str(1024)+'B', in_data))
+    return (in_data, pyaudio.paContinue)
+
+# open stream
+#format=p.get_format_from_width(WIDTH),
 stream = p.open(format=FORMAT,
                 channels=CHANNELS,
                 rate=RATE,
                 input=True,
-                frames_per_buffer=CHUNK)
+                output=True)#,
+                #stream_callback=callback)
 
-print("* recording")
+stream.start_stream()
 
-frames = []
-
-for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
+while stream.is_active(): #while song is not over
     data = stream.read(CHUNK)
-    frames.append(data)
-
-print("* done recording")
+    print(len(data))
+    print(struct.unpack('4096B', data))
+    time.sleep(0.1)
 
 stream.stop_stream()
 stream.close()
+
 p.terminate()
-
-wf = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
-wf.setnchannels(CHANNELS)
-wf.setsampwidth(p.get_sample_size(FORMAT))
-wf.setframerate(RATE)
-wf.writeframes(b''.join(frames))
-wf.close()
-
-print(frames)
