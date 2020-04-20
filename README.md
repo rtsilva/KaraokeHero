@@ -17,6 +17,6 @@ Libraries Used + Installation Requirements
       		- >>> pa = pyaudio.PyAudio()
       		- >>> pa.get_default_input_device_info()
       		- >>> pa.get_default_output_device_info()
-- pythonn tkinter
+- python tkinter
 	- should already be installed, run the following to check:
 	- >>> python -m tkinter
