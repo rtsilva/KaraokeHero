@@ -6,7 +6,7 @@ track = midi.Track()
 # Append the track to the pattern
 pattern.append(track)
 # Instantiate a MIDI note on event, append it to the track
-on = midi.NoteOnEvent(tick=0, velocity=20, pitch=midi.G_3)
+on = midi.NoteOnEvent(tick=1, velocity=20, pitch=midi.G_3)
 
 track.append(on)
 # Instantiate a MIDI note off event, append it to the track
