@@ -12,13 +12,11 @@ def play_song(): #
     #show lyric video, play song, capture audio,
     return
 
-
 def song_visual(): #lena
     return
 
 def song_audio(): #renee
     return
-
 
 def result():
     #what the user should see after finishing song, button back to menu()
