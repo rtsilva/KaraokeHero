@@ -44,9 +44,15 @@ def extract_notes(filename):
     return ticks, notes
 
 def animate_midi(filename):
+    '''
+    input:
+        - filename: path to midi file
+    output:
+        - shows plot of on notes of midi file with appropriate spacing. This animation
+          can be saved as an mp4, or we can plot on top of it for our project.
+    '''
     x_data, y_data = extract_notes(filename)
-
-    print("done extracting")
+    x_range = np.linspace(0,10,20)
 
     y_data_space = [(0,0) for i in range(10)] + y_data + [(0,0) for i in range(10)]
 
@@ -54,7 +60,7 @@ def animate_midi(filename):
     ax = plt.axes(xlim=(0, 10), ylim=(0, 35))
     x = []
     y = []
-    line, = ax.plot(x, y, 'bo')
+    line, = ax.plot(x, y, 'bs', markersize=20)
 
     # add note lines for reference, can remove later
     plt.plot([0, 10], [30, 30], 'k-', lw=3)
@@ -66,23 +72,32 @@ def animate_midi(filename):
 
 
     def init():
-        line.set_data([i for i in range(10)], [0 for i in range(10)])
+        line.set_data([i for i in x_range], [0 for i in range(20)])
         return line,
 
     def animate(i):
         k = i
         l = i+10
 
-        # x = [x_data[j] for j in range(k, l)]
-        x = [j for j in range(0, 10)]
-        y = [(y_data_space[j][0]+1)*2.5 for j in range(k, l)]
+        x = [j for j in x_range]
+        y = [((y_data_space[j][0]+1)*2.5, y_data_space[j][1]) for j in range(k, l) for _ in range(2)]
 
-        line.set_data(x, y)
+        new_x = []
+        new_y = []
+
+        for i in range(20):
+            # only take on notes
+            if y[i][1] == 1:
+                new_x.append(x[i])
+                new_y.append(y[i][0])
+
+        line.set_data(new_x, new_y)
         return line,
 
+    # frames is number of notes we are showing, interval is time(ms) between each note
     anim = FuncAnimation(fig, animate, init_func=init,
                                frames=len(x_data) + 10, interval=100, blit=True, repeat = False)
 
     plt.show()
 
-animate_midi("example.mid")
+# animate_midi("example.mid")
