@@ -19,7 +19,7 @@ def extract_notes(filename):
                  have a loudness of 0, which will correlate with graph opacity later
     '''
     pattern = midi.read_midifile(filename)
-    print(pattern)
+    # print(pattern)
     notes = []
 
     total = 0
@@ -43,18 +43,14 @@ def extract_notes(filename):
     ticks = [i for i in range(total)]
     return ticks, notes
 
-def animate_midi(filename):
+def init_midi(filename):
     '''
     input:
         - filename: path to midi file
     output:
-        - shows plot of on notes of midi file with appropriate spacing. This animation
-          can be saved as an mp4, or we can plot on top of it for our project.
+        - initializes figure
     '''
     x_data, y_data = extract_notes(filename)
-    x_range = np.linspace(0,10,20)
-
-    y_data_space = [(0,0) for i in range(10)] + y_data + [(0,0) for i in range(10)]
 
     fig = plt.figure()
     ax = plt.axes(xlim=(0, 10), ylim=(0, 35))
@@ -70,6 +66,19 @@ def animate_midi(filename):
     plt.plot([0, 10], [10, 10], 'k-', lw=3)
     plt.plot([0, 10], [5, 5], 'k-', lw=3)
 
+    return fig, x_data, y_data, line
+
+def animate_midi(fig, x_data, y_data, line):
+    '''
+    input:
+        - fig: where animation will be shown
+    output:
+        - shows plot of on notes of midi file with appropriate spacing. This animation
+          can be saved as an mp4, or we can plot on top of it for our project.
+    '''
+
+    x_range = np.linspace(0,10,20)
+    y_data_space = [(0,0) for i in range(10)] + y_data + [(0,0) for i in range(10)]
 
     def init():
         line.set_data([i for i in x_range], [0 for i in range(20)])
@@ -98,6 +107,8 @@ def animate_midi(filename):
     anim = FuncAnimation(fig, animate, init_func=init,
                                frames=len(x_data) + 10, interval=100, blit=True, repeat = False)
 
-    plt.show()
+    # plt.show()
+    return None
 
-# animate_midi("example.mid")
+fig, x_data, y_data, line = init_midi("example.mid")
+animate_midi(fig, x_data, y_data, line)
