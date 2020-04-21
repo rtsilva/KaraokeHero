@@ -31,23 +31,27 @@ class PageOne(tk.Frame):
 
         # screen = Screen(self, parent, "twinkle-twinkle.mp4")
         # screen.pack()
+        button0 = ttk.Button(self, text="Start Game",
+                            command=lambda: play_song(fig, x_data, y_data, line_one, line_two))
+        button0.pack()
 
         # Create a canvas that can fit the above video source size
-        # mov_canvas = tk.Canvas(self, width = 60, height = 50)
+        # mov_canvas = tk.Frame(self, width = 1024//2, height = 576//2)
         # mov_canvas.pack()
-        # # mov_canvas.grid(row=0, column=0, padx=10, pady=2)
+        # mov_canvas.grid(row=0, column=0, padx=10, pady=2)
+
         # lmain = tk.Label(mov_canvas)
         # lmain.grid(row=0, column=0)
         # cap = cv2.VideoCapture("twinkle-twinkle.mp4")
         #
         # _, frame = cap.read()
-        # # frame = cv2.flip(frame, 1)
+        # frame = cv2.flip(frame, 1)
         # cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
         # img = Image.fromarray(cv2image)
         # imgtk = ImageTk.PhotoImage(image=img)
         # lmain.imgtk = imgtk
         # lmain.configure(image=imgtk)
-        #
+
         # def show_frame():
         #     _, frame = cap.read()
         #     # frame = cv2.flip(frame, 1)
@@ -60,6 +64,7 @@ class PageOne(tk.Frame):
 
         def play_song(fig, x_data, y_data, line_one, line_two):
             animate_midi(fig, x_data, y_data, line_one, line_two)
+            # show_frame()
             # screen.play("twinkle-twinkle.mp4")
 
         fig, x_data, y_data, line_one, line_two = init_midi("twinkle-twinkle-little-star.mid")
@@ -67,9 +72,7 @@ class PageOne(tk.Frame):
         canvas = FigureCanvasTkAgg(fig, self)
         canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
 
-        button0 = ttk.Button(self, text="Start Game",
-                            command=lambda: play_song(fig, x_data, y_data, line_one, line_two))
-        button0.pack()
+
 
         button1 = ttk.Button(self, text="Exit Game",
                             command=lambda: controller.show_frame(StartPage))

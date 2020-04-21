@@ -145,6 +145,9 @@ def init_midi(filename):
 #     return plt
 
 def get_user_audio():
+    '''
+    Using pyaudio, this function takes in mic input and returns the respective midi pitch value.
+    '''
     # instantiate PyAudio object
     p = pyaudio.PyAudio()
 
