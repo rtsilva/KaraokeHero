@@ -4,7 +4,7 @@
 import sys
 import matplotlib
 
-from pages import KaraokeHeroApp
+from app import KaraokeHeroApp
 
 def menu():
     #put songs availible to sing here

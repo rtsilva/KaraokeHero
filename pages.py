@@ -9,38 +9,6 @@ from tkinter import ttk
 
 LARGE_FONT= ("Verdana", 12)
 
-class KaraokeHeroApp(tk.Tk):
-
-    def __init__(self, *args, **kwargs):
-
-        tk.Tk.__init__(self, *args, **kwargs)
-
-        # tk.Tk.iconbitmap(self, default="clienticon.ico")
-        tk.Tk.wm_title(self, "KaraokeHero")
-
-
-        container = tk.Frame(self)
-        container.pack(side="top", fill="both", expand = True)
-        container.grid_rowconfigure(0, weight=1)
-        container.grid_columnconfigure(0, weight=1)
-
-        self.frames = {}
-
-        for F in (StartPage, PageOne, PageTwo):
-
-            frame = F(container, self)
-
-            self.frames[F] = frame
-
-            frame.grid(row=0, column=0, sticky="nsew")
-
-        self.show_frame(StartPage)
-
-    def show_frame(self, cont):
-
-        frame = self.frames[cont]
-        frame.tkraise()
-
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self,parent)
@@ -57,14 +25,14 @@ class PageOne(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        fig, x_data, y_data, line = init_midi("example.mid")
+        fig, x_data, y_data, line = init_midi("twinkle-twinkle-little-star.mid")
+
+        canvas = FigureCanvasTkAgg(fig, self)
+        canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
 
         button0 = ttk.Button(self, text="Start Game",
                             command=lambda: animate_midi(fig, x_data, y_data, line))
         button0.pack()
-
-        canvas = FigureCanvasTkAgg(fig, self)
-        canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
 
         button1 = ttk.Button(self, text="Exit Game",
                             command=lambda: controller.show_frame(StartPage))

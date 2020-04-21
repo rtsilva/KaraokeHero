@@ -3,7 +3,7 @@ from audiolazy import midi2str
 
 from names import NoteOn, NoteOff, End
 
-pattern = midi.read_midifile("example.mid")
+pattern = midi.read_midifile("twinkle-twinkle-little-star.mid")
 
 for track in pattern:
     print("Next Track")
@@ -19,3 +19,4 @@ for track in pattern:
         elif(event.name == End):
             print("End of Event")
         print("Length of time:", event.tick)
+        
