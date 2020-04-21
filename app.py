@@ -20,7 +20,6 @@ class KaraokeHeroApp(tk.Tk):
         # tk.Tk.iconbitmap(self, default="clienticon.ico")
         tk.Tk.wm_title(self, "KaraokeHero")
 
-
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand = True)
         container.grid_rowconfigure(0, weight=1)

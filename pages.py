@@ -29,8 +29,8 @@ class PageOne(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        screen = Screen(self, parent, "twinkle-twinkle.mp4")
-        screen.pack()
+        # screen = Screen(self, parent, "twinkle-twinkle.mp4")
+        # screen.pack()
 
         # Create a canvas that can fit the above video source size
         # mov_canvas = tk.Canvas(self, width = 60, height = 50)
@@ -58,17 +58,17 @@ class PageOne(tk.Frame):
         #     lmain.configure(image=imgtk)
         #     lmain.after(1, show_frame)
 
-        def play_song(fig, x_data, y_data, line):
-            animate_midi(fig, x_data, y_data, line)
-            screen.play("twinkle-twinkle.mp4")
+        def play_song(fig, x_data, y_data, line_one, line_two):
+            animate_midi(fig, x_data, y_data, line_one, line_two)
+            # screen.play("twinkle-twinkle.mp4")
 
-        fig, x_data, y_data, line = init_midi("twinkle-twinkle-little-star.mid")
+        fig, x_data, y_data, line_one, line_two = init_midi("twinkle-twinkle-little-star.mid")
 
         canvas = FigureCanvasTkAgg(fig, self)
         canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
 
         button0 = ttk.Button(self, text="Start Game",
-                            command=lambda: play_song(fig, x_data, y_data, line))
+                            command=lambda: play_song(fig, x_data, y_data, line_one, line_two))
         button0.pack()
 
         button1 = ttk.Button(self, text="Exit Game",
