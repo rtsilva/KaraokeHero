@@ -111,7 +111,7 @@ def animate_midi(fig, x_data, y_data, line):
     anim = FuncAnimation(fig, animate, init_func=init,
                                frames=len(x_data) + x_r, interval=1, blit=True, repeat = False)
 
-    plt.show()
+    # plt.show()
     return None
 
 # fig, x_data, y_data, line = init_midi("twinkle-twinkle-little-star.mid")

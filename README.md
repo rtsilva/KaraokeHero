@@ -8,7 +8,7 @@ Libraries Used + Installation Requirements
 - python audiolazy
 	- run pip install audiolazy
 
-- python pyaudio 
+- python pyaudio
 	- >>> $ brew install portaudio
 	- >>> $ pip install pyaudio
 
@@ -26,3 +26,17 @@ Libraries Used + Installation Requirements
 - python  aubio
 	- >>> $ pip install aubio
 
+- python OpenCV (cv2)
+	- >>> pip install opencv-python
+
+- python vlc (I scoured the interwebs to try and get this to work... last command alone might be enough)
+	- >>> pip install python-vlc
+	- >>> pip install --upgrade billiard
+	- >>> pip install --upgrade celery
+	- >>> pip install --upgrade kombu
+	- >>> pip install --upgrade amqp
+	- >>> pip install --upgrade redis
+	- >>> brew cask install vlc
+
+<!-- - python cocoa
+	- >>> pip install pycocoa -->
