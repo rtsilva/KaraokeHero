@@ -5,8 +5,22 @@ from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 from names import NoteOn, NoteOff, End
-from audiolazy import midi2str
+from audiolazy import midi2str, freq2midi
 
+import pyaudio
+import time
+
+import aubio
+
+CHUNK = 2048 #1024
+FORMAT = pyaudio.paFloat32
+WIDTH = 2
+CHANNELS = 1
+RATE = 44100
+###
+HOP_SIZE                = CHUNK//2
+PERIOD_SIZE_IN_FRAME    = HOP_SIZE
+METHOD                  = "default"
 x_r = 80
 
 def extract_notes(filename):
@@ -72,6 +86,63 @@ def init_midi(filename):
 
     return fig, x_data, y_data, line
 
+def turn_mic_off(p, mic):
+    mic.stop_stream()
+    mic.close()
+    p.terminate()
+
+def animate_user():
+    ax = plt.axes(xlim=(0, x_r), ylim=(0, 35))
+    other_line, = ax.plot([], [], 'ro', markersize =20)
+
+    def init():
+        other_line.set_data([10], [0])
+        return other_line,
+
+    def animate(i):
+        # instantiate PyAudio object
+        p = pyaudio.PyAudio()
+
+        new_x = [10]
+
+        # open mic stream
+        mic = p.open(format=FORMAT,
+                        channels=CHANNELS,
+                        rate=RATE,
+                        input=True,
+                        frames_per_buffer=PERIOD_SIZE_IN_FRAME)
+
+        # Initiating Aubio's pitch detection object.
+        pDetection = aubio.pitch(METHOD, CHUNK, HOP_SIZE, RATE)
+        # Set unit.
+        pDetection.set_unit("Hz")
+        # Frequency under 5 dB will considered
+        # as a silence (8 dB is a C1 or midi#0)
+        pDetection.set_silence(-40)
+
+        data = mic.read(PERIOD_SIZE_IN_FRAME)
+        # Convert into number that Aubio understand.
+        samples = np.fromstring(data, dtype=aubio.float_type)
+        # Finally get the pitch.
+        pitch = pDetection(samples)[0]
+
+        midi = freq2midi(pitch)
+
+        new_y = [midi%12]
+
+        other_line.set_data(new_x, new_y)
+
+        mic.stop_stream()
+        mic.close()
+        p.terminate()
+
+        return other_line,
+
+    anim = FuncAnimation(fig, animate, init_func=init,
+                               frames=1, interval=1, blit=True, repeat = True)
+
+    return plt
+
 def animate_midi(fig, x_data, y_data, line):
     '''
     input:
@@ -116,3 +187,5 @@ def animate_midi(fig, x_data, y_data, line):
 
 # fig, x_data, y_data, line = init_midi("twinkle-twinkle-little-star.mid")
 # animate_midi(fig, x_data, y_data, line)
+# plt = animate_user()
+# plt.show()
