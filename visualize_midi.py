@@ -91,7 +91,7 @@ def init_midi(filename):
 #     mic.stop_stream()
 #     mic.close()
 #     p.terminate()
-# 
+#
 # def animate_user():
 #     ax = plt.axes(xlim=(0, x_r), ylim=(0, 35))
 #     other_line, = ax.plot([], [], 'ro', markersize =20)
@@ -225,7 +225,7 @@ def animate_midi(fig, x_data, y_data, line_one,line_two):
     # plt.show()
     return plt
 
-fig, x_data, y_data, line_one, line_two = init_midi("twinkle-twinkle-little-star.mid")
-plt = animate_midi(fig, x_data, y_data, line_one, line_two)
+# fig, x_data, y_data, line_one, line_two = init_midi("twinkle-twinkle-little-star.mid")
+# plt = animate_midi(fig, x_data, y_data, line_one, line_two)
 # plt = animate_user()
-plt.show()
+# plt.show()
