@@ -9,8 +9,8 @@ Libraries Used + Installation Requirements
 	- run pip install audiolazy
 
 - python pyaudio
-	- >>> $ brew install portaudio
-	- >>> $ pip install pyaudio
+	- >> $ brew install portaudio
+	- >> $ pip install pyaudio
 
 	- once installed, check to see if there is at least one input and output device:
 	- >>> $ python
