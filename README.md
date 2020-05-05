@@ -38,5 +38,8 @@ Libraries Used + Installation Requirements
 	- >>> pip install --upgrade redis
 	- >>> brew cask install vlc
 
+- pygame
+	- pip install pygame
+
 <!-- - python cocoa
 	- >>> pip install pycocoa -->
