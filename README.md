@@ -41,5 +41,10 @@ Libraries Used + Installation Requirements
 - pygame
 	- pip install pygame
 
+- ffmpeg (for mp4 making)
+	- pip install ffmpeg
+	- lol jk try this brew install ffmpeg
+	- if all else fails... (didn't need) https://browzwear.com/services/downloads/ffmpeg/
+
 <!-- - python cocoa
 	- >>> pip install pycocoa -->

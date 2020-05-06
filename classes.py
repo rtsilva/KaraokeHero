@@ -157,6 +157,7 @@ class App:
         return
 
     def song_visual(self): #lena
+        # play midi mp4 and twinkle-twinkle mp4, silence midi mp4 (files already converted, TODO)
         return
 
     def song_audio(self): #renee
