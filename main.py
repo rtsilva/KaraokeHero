@@ -18,8 +18,13 @@ if __name__ == '__main__':
     cont = True
     while cont:
         song = app.menu()
-        if song != None:
+        if song == False:
+            app.quit()
+            break
+        else:
             res = app.play_song()
-            if res:
-                cont = False
+            if not res:
+                app.quit()
+                break
+
     fini = True

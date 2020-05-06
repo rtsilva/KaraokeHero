@@ -2,25 +2,32 @@ import pygame
 from values import colors
 
 class Button:
+    name = None
     x = None
     y = None
     width = None
     height = None
 
-    def __init__(self, x, y, width, height):
+    # positions are left, top, width, height
+    # remember screen y goes from 0 to max, downwards
+    def __init__(self, x, y, width, height, name):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
+        self.name = name
 
     def is_clicked(self, x, y):
 
-        if self.x - self.width > x or self.x + self.width < x:
+        if self.x > x or self.x + self.width < x:
             return False
-        if self.y - self.height > y or self.y + self.height < x:
+        if self.y + self.height < y or self.y > y:
             return False
 
         return True
+
+    def __str__(self):
+        return "X: " +  str(self.x) + "\nY: " + str(self.y) + "\nWidth: " + str(self.width) + "\nHeight: "+ str(self.height)
 
 class App:
     user_id = None
@@ -45,6 +52,10 @@ class App:
         self.game_display = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption('KaraokeHero')
 
+    def quit(self):
+        pygame.quit()
+        exit()
+
     def menu(self):
         # display available songs and return selected song if song chosen
         # else False (user has chosen to quit)
@@ -66,40 +77,48 @@ class App:
 
                     if twinkle.is_clicked(x, y):
                         self.shade_button(twinkle.x, twinkle.y, colors["dark blue"], "Twinkle Twinkle")
+                        print("hit MENU TWINKLE")
                         self.song_selection = "Twinkle Twinkle"
                         menu = False
                         break
                     elif buns.is_clicked(x, y):
+                        print("hit MENU BUNS")
                         self.shade_button(buns.x, buns.y, colors["dark blue"], "Hot Cross Buns")
                         self.song_selection = "Hot Cross Buns"
                         menu = False
                         break
                     elif quit.is_clicked(x, y):
                         self.shade_button(quit.x, quit.y, colors["dark red"], "QUIT")
-                        pygame.quit()
-                        exit()
-                        menu = False
-                        break
+                        print("hit MENU QUIT")
+                        return False
 
-            # self.game_display.update()
         return self.song_selection
 
     def draw_button(self, x, y, color, name):
-        button = Button(x, y, self.button_w, self.button_h)
+        button = Button(x, y, self.button_w, self.button_h, name)
+        # positions are left, top, width, height
+        # remember screen y goes from 0 to max, downwards
         rect = pygame.draw.rect(self.game_display, color, (x, y, self.button_w, self.button_h))
-        textSurface = self.font.render(name, True, colors["black"])
 
-        self.game_display.blit(textSurface, (x, y))
+        textSurface = self.font.render(name, True, colors["black"])
+        h = textSurface.get_rect().height
+        w = textSurface.get_rect().width
+
+        self.game_display.blit(textSurface, (x+(self.button_w - w)//2, y + (self.button_h - h)//2))
         pygame.display.update()
 
         return button
 
     def shade_button(self, x, y, color, name):
-
+        # positions are left, top, width, height
+        # remember screen y goes from 0 to max, downwards
         rect = pygame.draw.rect(self.game_display, color, (x, y, self.button_w, self.button_h))
         textSurface = self.font.render(name, True, colors["black"])
 
-        self.game_display.blit(textSurface, (x, y))
+        h = textSurface.get_rect().height
+        w = textSurface.get_rect().width
+
+        self.game_display.blit(textSurface, (x+(self.button_w - w)//2, y + (self.button_h - h)//2))
         pygame.display.update()
 
         return
@@ -125,15 +144,12 @@ class App:
                     x, y = pygame.mouse.get_pos()
                     if quit.is_clicked(x, y):
                         self.shade_button(quit.x, quit.y, colors["dark red"], "QUIT")
-                        pygame.quit()
-                        exit()
-                        play = False
-                        break
-                        # quit()
+                        print("hit SONG QUIT")
+                        return False
                     elif menu.is_clicked(x, y):
                         self.shade_button(menu.x, menu.y, colors["dark red"], "MENU")
-                        play = False
-                        break
+                        print("hit SONG MENU")
+                        return True
         return False
 
     def upload_score(self):
