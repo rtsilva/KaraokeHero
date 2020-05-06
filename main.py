@@ -18,7 +18,7 @@ if __name__ == '__main__':
     cont = True
     while cont:
         song = app.menu()
-        if song == False:
+        if not song:
             app.quit()
             break
         else:
