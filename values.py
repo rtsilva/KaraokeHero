@@ -7,4 +7,5 @@ colors = {
     "blue": (0,0,255),
     "dark blue": (50, 0, 255),
     "dark red": (255,0,50),
+    "dark green": (25, 255, 25),
 }
