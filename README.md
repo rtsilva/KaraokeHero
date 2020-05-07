@@ -1,7 +1,7 @@
 # Karaoke Hero 
 ## Final project for 6.835 Multimodal User Interfaces
 
-Karaoke is a interactive karaoke coach which allows users to see the notes of a song juxtaposed with their own voice in real time.
+Karaoke is a interactive karaoke coach which allows users to see the notes of a song juxtaposed with their own voice in real time. Creatied in Python 3.6, only tested on macOS.
 
 ## Libraries Used + Installation Requirements
 
