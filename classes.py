@@ -1,10 +1,31 @@
 import pygame
+import numpy as np
+import math
 
 import vlc
 from moviepy.editor import *
 import sys
 
 from values import colors
+
+from names import NoteOn, NoteOff, End
+from audiolazy import midi2str, freq2midi
+
+import pyaudio
+import time
+
+import aubio
+
+CHUNK = 2048 #1024
+FORMAT = pyaudio.paFloat32
+WIDTH = 2
+CHANNELS = 1
+RATE = 44100
+###
+HOP_SIZE                = CHUNK//2
+PERIOD_SIZE_IN_FRAME    = HOP_SIZE
+METHOD                  = "default"
+x_r = 80
 
 class Button:
     name = None
@@ -141,6 +162,43 @@ class App:
 
         return
 
+    def get_user_audio(self):
+        '''
+        Using pyaudio, this function takes in mic input and returns the respective midi pitch value.
+        '''
+        # instantiate PyAudio object
+        p = pyaudio.PyAudio()
+
+        # open mic stream
+        mic = p.open(format=FORMAT,
+                        channels=CHANNELS,
+                        rate=RATE,
+                        input=True,
+                        frames_per_buffer=PERIOD_SIZE_IN_FRAME)
+
+        # Initiating Aubio's pitch detection object.
+        pDetection = aubio.pitch(METHOD, CHUNK, HOP_SIZE, RATE)
+        # Set unit.
+        pDetection.set_unit("Hz")
+        # Frequency under 5 dB will considered
+        # as a silence (8 dB is a C1 or midi#0)
+        pDetection.set_silence(-40)
+
+        data = mic.read(PERIOD_SIZE_IN_FRAME)
+        # Convert into number that Aubio understand.
+        samples = np.fromstring(data, dtype=aubio.float_type)
+
+        # Finally get the pitch.
+        pitch = pDetection(samples)[0]
+
+        midi = freq2midi(pitch)
+        print(midi)
+
+        mic.stop_stream()
+        mic.close()
+        p.terminate()
+
+        return midi
 
     def play_song(self): #
         # show lyric video, play song, capture audio
@@ -176,14 +234,29 @@ class App:
         quit = self.draw_button(25, 500, colors["red"], "QUIT")
         start = self.draw_button(25, 100, colors["green"], "START")
 
-        # clip = VideoFileClip(self.movie)
+        # visualize beatmap
+        beat_map_x = 350
+        beat_map_y = 50
 
+        beat_map = pygame.draw.rect(self.game_display, colors["black"], (beat_map_x, beat_map_y , self.width - self.button_w*3, self.height - self.button_h*2))
+        for i in range(0, self.height - self.button_h*2, 46):
+            pygame.draw.line(self.game_display, colors["white"], (beat_map_x, beat_map_y  + i), (beat_map_x + (self.width - self.button_w*3), beat_map_y  + i), 4)
+        pygame.draw.line(self.game_display, colors["blue"], (beat_map_x + 50, beat_map_y), (beat_map_x + 50, beat_map_y + (self.height - self.button_h*2)), 4)
+
+        # user = pygame.draw.rect(self.game_display, colors["red"], (beat_map_x + 40, beat_map_y, 20, 20))
+
+        # clip = VideoFileClip(self.movie)
+        # pygame.display.update()
 
         # movie.set_display(movie_screen)
         # movie.show()
 
-
         while play:
+
+
+
+            # pygame.display.update()
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -205,14 +278,42 @@ class App:
                         return True
                     elif start.is_clicked(x, y):
                         self.shade_button(start.x, start.y, colors["dark green"], "START")
-                        # movie.play()
-                        # Start movie playback
-                        # player.play()
-                        # clip.resize(width=500).preview()
-                        # clip.preview()
-                        # display = ipython_display(clip, autoplay=1, loop=1)
-                        # self.game_display.blit(movie_screen,(100,100))
-                        
+
+            # reset EVERYTHING and REDRAW :))))))
+            self.game_display.fill(colors["white"])
+
+            menu = self.draw_button(25, 300, colors["red"], "MENU")
+            quit = self.draw_button(25, 500, colors["red"], "QUIT")
+            start = self.draw_button(25, 100, colors["green"], "START")
+
+            beat_map = pygame.draw.rect(self.game_display, colors["black"], (beat_map_x, beat_map_y , self.width - self.button_w*3, self.height - self.button_h*2))
+            for i in range(0, self.height - self.button_h*2, 46):
+                pygame.draw.line(self.game_display, colors["white"], (beat_map_x, beat_map_y  + i), (beat_map_x + (self.width - self.button_w*3), beat_map_y  + i), 4)
+            pygame.draw.line(self.game_display, colors["blue"], (beat_map_x + 50, beat_map_y), (beat_map_x + 50, beat_map_y + (self.height - self.button_h*2)), 4)
+
+            audio = self.get_user_audio()
+            final_audio = max(audio, 0)
+
+            normalized_pitch = final_audio%13
+            # print(normalized_pitch)
+            # print(self.height - self.button_h*2)
+            y_val = int((self.height + self.button_h*2)/46*normalized_pitch)
+
+            pygame.draw.rect(self.game_display, colors["red"], (beat_map_x + 50, y_val, 20, 20))
+            # pygame.draw.circle(self.game_display, colors["red"], (beat_map_x + 50, y_val), 15)
+            # user.move_ip(0, user.y - y_val)
+            pygame.display.flip()
+            pygame.display.update()
+            pygame.time.delay(10)
+
+            # movie.play()
+            # Start movie playback
+            # player.play()
+            # clip.resize(width=500).preview()
+            # clip.preview()
+            # display = ipython_display(clip, autoplay=1, loop=1)
+            # self.game_display.blit(movie_screen,(100,100))
+
         # clock.tick(FPS)
         # self.video_display.blit(player,(100,150))
         pygame.display.update()
