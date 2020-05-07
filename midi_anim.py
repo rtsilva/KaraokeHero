@@ -143,7 +143,7 @@ def create_beatmap(note_tracks, config):
     rowsNum = pitch_max - pitch_min + 1
     #beatmap = [[] * rowsNum] #at each index/pitch, list of notes (rectangle object, length, time to be sung at)
     #self.rect = pygame.Rect(x, y, width, height)
-    rectHight = int( beat_screen_h/rowsNum )
+    rectHight = 46 #int( beat_screen_h/rowsNum ) #46
     rectWidth = 75 #however long the beat is
     initX = beat_screen_w #start rectangle at the right of the beatmap screen
     initY = 500 #beat_screen_h-beatRow*rectHight #start rectangle in the correct row
@@ -156,10 +156,13 @@ def create_beatmap(note_tracks, config):
     for track in note_tracks:
         for pitch_list in track:
             for note in pitch_list:
-                rectWidth = (note.end_time-note.start_time)*100 #scale/multiply by tempo
+                rectWidth = (note.end_time-note.start_time)*200 #scale/multiply by tempo
+                X = note.start_time*200
                 Y = get_note_Y(note, pitch_min, pitch_max, config)
-                temp_rect = pygame.Rect(initX, Y, rectWidth, rectHight)
-                beatmap.append( (temp_rect, note.start_time) )
+                temp_rect = pygame.Rect(X, Y, rectWidth, rectHight)
+                
+                beatmap.append( (temp_rect, note.start_time, note.end_time) )
+                #beatmap.append( (beatRow, note.start_time, note.end_time) )
     ##TODO LOOK AT create_image TO IMPROVE THE CODE TODO
     return beatmap
 
