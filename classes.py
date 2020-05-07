@@ -139,7 +139,7 @@ class App:
 
                         # self.movie = './twinkle-twinkle.mp4' # TODO - fix
                         # self.movie = pygame.movie.Movie('./twinkle-twinkle.mp4')
-                        # self.song = 'media/twinkle-twinkle.ogg'
+                        self.song = 'media/hot-cross-buns.ogg'
                         menu = False
                         break
                     elif quit.is_clicked(x, y):
