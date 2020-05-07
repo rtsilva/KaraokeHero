@@ -361,16 +361,16 @@ class App:
             #self.song_visual(startTime)
             if self.start_song: #only while a song is playing
                 for rectangle, rectStart, rectEnd in self.rectangles: #update coords of rectangles
-                    rectangle.move_ip(-100, 0) #move to the left
+                    rectangle.move_ip(-120, 0) #move to the left
                     if rectangle.x >= beat_map_x and rectangle.x <= self.width - self.button_w*3:
-                        active_rects.append( pygame.draw.rect(self.game_display, colors["red"], rectangle)
+                        active_rects.append( pygame.draw.rect(self.game_display, colors["blue"], rectangle)
                         )
 
 
             #pygame.display.flip()
             pygame.display.update(active_rects)
             # pygame.display.update()
-            pygame.time.delay(60)
+            pygame.time.delay(120)
 
             # movie.play()
             # Start movie playback
