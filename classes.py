@@ -67,7 +67,9 @@ class App:
     user_id = None
     game_display = None
     # video_display = None
+    song = None
     song_selection = None
+    midi = None
     is_playing = False
     quit = False
     score = None
@@ -96,7 +98,7 @@ class App:
         pygame.display.set_caption('KaraokeHero')
 
         pygame.mixer.init(buffer=128)
-        self.song = None
+        # self.song = None
         # pygame.mixer.quit()
 
 
@@ -130,6 +132,7 @@ class App:
                         print("hit MENU TWINKLE")
                         self.song_selection = "Twinkle Twinkle"
                         self.song = 'media/twinkle-twinkle.ogg'
+                        self.midi = "midi_filename_twinkle"
                         # self.movie = './twinkle-twinkle.mp4'
                         # self.movie = pygame.movie.Movie('./twinkle-twinkle.mp4')
                         menu = False
@@ -138,10 +141,10 @@ class App:
                         print("hit MENU BUNS")
                         self.shade_button(buns.x, buns.y, colors["dark blue"], "Hot Cross Buns")
                         self.song_selection = "Hot Cross Buns"
-
+                        self.song = 'media/hot-cross-buns.ogg'
+                        self.midi = "midi_filename_buns"
                         # self.movie = './twinkle-twinkle.mp4' # TODO - fix
                         # self.movie = pygame.movie.Movie('./twinkle-twinkle.mp4')
-                        self.song = 'media/hot-cross-buns.ogg'
                         menu = False
                         break
                     elif quit.is_clicked(x, y):
@@ -273,9 +276,11 @@ class App:
         # movie.show()
 
         #determine which audio to play
-        self.rectangles = midi_anim.main()
+        print(self.midi)
+        self.rectangles = midi_anim.main(self.midi)
+        # print(self.midi)
         pygame.mixer.music.load(self.song)
-        
+
         startTime = -1
         pitches = set([])
         while self.is_playing:
@@ -321,12 +326,12 @@ class App:
                         self.start_song = True
 
             # clear everything and re-draw
-            self.game_display.fill(colors["white"])
+            self.game_display.fill(colors["white"], (beat_map_x, 0 , self.width - beat_map_x, self.height))
 
-            menu = self.draw_button(25, 300, colors["red"], "MENU")
-            quit = self.draw_button(25, 500, colors["red"], "QUIT")
-            start = self.draw_button(25, 100, colors["green"], "START")
-
+            # menu = self.draw_button(25, 300, colors["red"], "MENU")
+            # quit = self.draw_button(25, 500, colors["red"], "QUIT")
+            # start = self.draw_button(25, 100, colors["green"], "START")
+            #
             beat_map = pygame.draw.rect(self.game_display, colors["black"], (beat_map_x, beat_map_y , self.width - self.button_w*3, self.height - self.button_h*2))
             for i in range(0, self.height - self.button_h*2, 46):
                 pygame.draw.line(self.game_display, colors["white"], (beat_map_x, beat_map_y  + i), (beat_map_x + (self.width - self.button_w*3), beat_map_y  + i), 4)
@@ -355,7 +360,7 @@ class App:
             #show beats on beatmap
             #self.song_visual(startTime)
             if self.start_song: #only while a song is playing
-                for rectangle, rectStart, rectEnd in self.rectangles: #update coords of rectangles 
+                for rectangle, rectStart, rectEnd in self.rectangles: #update coords of rectangles
                     rectangle.move_ip(-150, 0) #move to the left
                     if rectangle.x >= beat_map_x and rectangle.x <= self.width - self.button_w*3:
                         active_rects.append( pygame.draw.rect(self.game_display, colors["red"], rectangle)
@@ -396,7 +401,7 @@ class App:
             now = pygame.time.get_ticks()
             #rect = rectangles.pop(0)
 
-            for rectangle, rectStart, rectEnd in self.rectangles: #update coords of rectangles 
+            for rectangle, rectStart, rectEnd in self.rectangles: #update coords of rectangles
                 now = pygame.time.get_ticks()
                 # while now-startTime < rectTime:
                 #     # do nothing
@@ -407,7 +412,7 @@ class App:
                 #TODO add rectangle.x and .y offset since the visual screen is smaller than the game screen
                 #self.game_display.blit(rectangle, (rectangle.x, rectangle.y))
                 pygame.draw.rect(self.game_display, colors["red"], rectangle)
-                
+
 
 
 
