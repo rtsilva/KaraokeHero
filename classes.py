@@ -362,7 +362,7 @@ class App:
             if self.start_song: #only while a song is playing
                 for rectangle, rectStart, rectEnd in self.rectangles: #update coords of rectangles
                     rectangle.move_ip(-100, 0) #move to the left
-                    if rectangle.x >= beat_map_x and rectangle.x <= self.width - self.button_w*3:
+                    if rectangle.x >= beat_map_x and rectangle.x+rectangle.width <= self.width - self.button_w*3:
                         active_rects.append( pygame.draw.rect(self.game_display, colors["red"], rectangle)
                         )
 
