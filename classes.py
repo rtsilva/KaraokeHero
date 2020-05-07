@@ -127,6 +127,7 @@ class App:
                         self.shade_button(twinkle.x, twinkle.y, colors["dark blue"], "Twinkle Twinkle")
                         print("hit MENU TWINKLE")
                         self.song_selection = "Twinkle Twinkle"
+                        self.song = 'media/twinkle-twinkle.ogg'
                         # self.movie = './twinkle-twinkle.mp4'
                         # self.movie = pygame.movie.Movie('./twinkle-twinkle.mp4')
                         menu = False
