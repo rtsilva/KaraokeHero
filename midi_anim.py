@@ -120,7 +120,7 @@ def print_progress(msg, current, total):
     sys.stdout.flush()
 
 
-def create_beatmap(note_tracks, config):
+def create_beatmap(note_tracks, config, name):
     #SETUP
     frame_rate = float(config["frame_rate"])
     waiting_time_before_end = float(config["waiting_time_before_end"])
@@ -136,7 +136,7 @@ def create_beatmap(note_tracks, config):
         end_time = get_maximum_time(note_tracks) + waiting_time_before_end
     else:
         end_time = float(config["end_time"])
-    note_tracks, tempo_bpm, resolution = read_midi(config["midi_filename"])
+    note_tracks, tempo_bpm, resolution = read_midi(config[name])
     ############## end setup
 
 
@@ -160,7 +160,7 @@ def create_beatmap(note_tracks, config):
                 X = note.start_time*200
                 Y = get_note_Y(note, pitch_min, pitch_max, config)
                 temp_rect = pygame.Rect(X, Y, rectWidth, rectHight)
-                
+
                 beatmap.append( (temp_rect, note.start_time, note.end_time) )
                 #beatmap.append( (beatRow, note.start_time, note.end_time) )
     ##TODO LOOK AT create_image TO IMPROVE THE CODE TODO
@@ -422,7 +422,7 @@ def get_config(filename):
     return config
 
 
-def main():
+def main(name):
     # creates video (series of images) and stores in tmp_images, then finally
     # puts in output folder as final.mp4
     delete_and_create_folders()
@@ -437,9 +437,11 @@ def main():
     filename = arguments["config"]
     config = get_config(filename)["DEFAULT"]
 
-    note_tracks, tempo_bpm, resolution = read_midi(config["midi_filename"])
-    print(create_beatmap(note_tracks, config))
-    return create_beatmap(note_tracks, config)
+    # note_tracks, tempo_bpm, resolution = read_midi(filename)
+    print(name)
+    note_tracks, tempo_bpm, resolution = read_midi(config[name])
+    print(create_beatmap(note_tracks, config, name))
+    return create_beatmap(note_tracks, config, name)
 
     #for making the video
     # calculate_note_times(note_tracks, tempo_bpm, resolution)
@@ -448,4 +450,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # main(config["midi_filename"])
+    pass
