@@ -10,6 +10,7 @@ from values import colors
 
 from names import NoteOn, NoteOff, End
 from audiolazy import midi2str, freq2midi
+import midi_anim
 
 import pyaudio
 import time
@@ -27,6 +28,7 @@ PERIOD_SIZE_IN_FRAME    = HOP_SIZE
 METHOD                  = "default"
 x_r = 80
 
+FPS = 30
 # sounds = {
 #     "twinkle" : pygame.mixer.Sound("media/twinkle-twinkle.ogg") #,
 #     # "begin" : pygame.mixer.Sound("data/begin.ogg"),
@@ -80,7 +82,7 @@ class App:
     screen_w = 1500
     screen_h = 750
 
-    FPS = 60
+    # FPS = 60
 
     def __init__(self, user_id):
         pygame.init()
@@ -88,7 +90,7 @@ class App:
         self.font = pygame.font.SysFont('Arial', 25)
         self.game_display = pygame.display.set_mode((self.width, self.height))
         # self.video = pygame.display.set_mode((self.width, self.height))
-        pygame.display.get_wm_info()
+        # pygame.display.get_wm_info()
         pygame.display.set_caption('KaraokeHero')
 
         pygame.mixer.init(buffer=128)
@@ -251,6 +253,8 @@ class App:
         beat_map_x = 350
         beat_map_y = 50
 
+        start_song = False
+
         beat_map = pygame.draw.rect(self.game_display, colors["black"], (beat_map_x, beat_map_y , self.width - self.button_w*3, self.height - self.button_h*2))
         for i in range(0, self.height - self.button_h*2, 46):
             pygame.draw.line(self.game_display, colors["white"], (beat_map_x, beat_map_y  + i), (beat_map_x + (self.width - self.button_w*3), beat_map_y  + i), 4)
@@ -300,8 +304,7 @@ class App:
                         print("hit SONG START")
                         pygame.mixer.music.play(start=0.0)
 
-
-            # reset EVERYTHING and REDRAW :))))))
+            # clear everything and re-draw
             self.game_display.fill(colors["white"])
 
             menu = self.draw_button(25, 300, colors["red"], "MENU")
@@ -348,7 +351,23 @@ class App:
 
     def song_visual(self): #lena
         # play midi mp4 and twinkle-twinkle mp4, silence midi mp4 (files already converted, TODO)
-        return
+        rectangles = midi_anim.main()
+        start = pygame.time.get_ticks()
+        cont = True
+        while cont:
+            now = pygame.time.get_ticks()
+            rect = rectangles.pop(0)
+
+
+        for rectangle, time in rectangles:
+            now = pygame.time.get_ticks()
+            while now-start < time:
+                # do nothing
+                print(' ')
+            self.game_display.blit(rectangle, (rectangle.x, rectangle.y))
+
+
+
 
     def song_audio(self): #renee
         return
