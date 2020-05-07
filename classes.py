@@ -141,7 +141,7 @@ class App:
 
                         # self.movie = './twinkle-twinkle.mp4' # TODO - fix
                         # self.movie = pygame.movie.Movie('./twinkle-twinkle.mp4')
-                        # self.song = 'media/twinkle-twinkle.ogg'
+                        self.song = 'media/hot-cross-buns.ogg'
                         menu = False
                         break
                     elif quit.is_clicked(x, y):
@@ -208,9 +208,10 @@ class App:
 
         # Finally get the pitch.
         pitch = pDetection(samples)[0]
+        # print("pitch:", pitch)
 
         midi = freq2midi(pitch)
-        print(midi)
+        # print("midi note: ", midi)
 
         mic.stop_stream()
         mic.close()
@@ -274,16 +275,17 @@ class App:
         #determine which audio to play
         self.rectangles = midi_anim.main()
         pygame.mixer.music.load(self.song)
+        
         startTime = -1
-
+        pitches = set([])
         while self.is_playing:
-
-
 
             # pygame.display.update()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    pygame.mixer.music.stop()
+                    pygame.mixer.music.unload()
                     pygame.quit()
                     exit()
                     # clip.close()
@@ -308,6 +310,7 @@ class App:
                         #pygame.mixer.music.unload()
                         print("hit SONG MENU")
                         self.start_song = False
+                        print(pitches)
                         return True
                     elif start.is_clicked(x, y):
                         self.shade_button(start.x, start.y, colors["dark green"], "START")
@@ -330,15 +333,20 @@ class App:
             pygame.draw.line(self.game_display, colors["blue"], (beat_map_x + 50, beat_map_y), (beat_map_x + 50, beat_map_y + (self.height - self.button_h*2)), 4)
 
             audio = self.get_user_audio()
-            final_audio = max(audio, 0)
+            final_audio = max(audio, 1)
 
-            normalized_pitch = final_audio%13
+            normalized_pitch = max(int(final_audio%13), 1)
+
+            pitches.add(normalized_pitch)
             # print(normalized_pitch)
+
             # print(self.height - self.button_h*2)
-            y_val = int((self.height + self.button_h*2)/46*normalized_pitch)
+            y_val = int((self.height - self.button_h*2)/normalized_pitch)
+            # print(beat_map_y + y_val)
+            # print("------------")
 
             active_rects = []
-            active_rects.append( pygame.draw.rect(self.game_display, colors["red"], (beat_map_x + 50, y_val, 20, 20))
+            active_rects.append( pygame.draw.rect(self.game_display, colors["red"], (beat_map_x + 50, beat_map_y + y_val, 20, 20))
             )
             # pygame.draw.circle(self.game_display, colors["red"], (beat_map_x + 50, y_val), 15)
             # user.move_ip(0, user.y - y_val)
@@ -370,6 +378,7 @@ class App:
         # clock.tick(FPS)
         # self.video_display.blit(player,(100,150))
         pygame.display.update()
+        print(pitches)
 
         return False
 
