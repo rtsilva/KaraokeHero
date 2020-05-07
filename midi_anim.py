@@ -139,9 +139,9 @@ def create_beatmap(note_tracks, config):
     note_tracks, tempo_bpm, resolution = read_midi(config["midi_filename"])
     ############## end setup
 
-    
+
     rowsNum = pitch_max - pitch_min + 1
-    #beatmap = [[] * rowsNum] #at each index/pitch, list of notes (rectangle object, length, time to be sung at) 
+    #beatmap = [[] * rowsNum] #at each index/pitch, list of notes (rectangle object, length, time to be sung at)
     #self.rect = pygame.Rect(x, y, width, height)
     rectHight = int( beat_screen_h/rowsNum )
     rectWidth = 75 #however long the beat is
@@ -152,7 +152,7 @@ def create_beatmap(note_tracks, config):
     beatmap = [] # list of tuples: (pygame.Rect, time to appear/be sung at)
 
     #for every note in every track...
-    calculate_note_times(note_tracks, tempo_bpm, resolution)    
+    calculate_note_times(note_tracks, tempo_bpm, resolution)
     for track in note_tracks:
         for pitch_list in track:
             for note in pitch_list:
@@ -162,7 +162,7 @@ def create_beatmap(note_tracks, config):
                 beatmap.append( (temp_rect, note.start_time) )
     ##TODO LOOK AT create_image TO IMPROVE THE CODE TODO
     return beatmap
-    
+
 def get_note_Y(note, pitch_min, pitch_max, config):
     margin_y = int(config["margin_y"])
     size_x = int(config["size_x"])
@@ -190,6 +190,63 @@ def get_note_Y(note, pitch_min, pitch_max, config):
     # p2 = (x_pos + x_length, y_pos + note_height)
 
     return y_pos
+
+def create_video2(note_tracks, config):
+    frame_rate = float(config["frame_rate"])
+    waiting_time_before_end = float(config["waiting_time_before_end"])
+    start_time = float(config["start_time"])
+    time_before_current = float(config["time_before_current"])
+    time_after_current = float(config["time_after_current"])
+
+    pitch_min, pitch_max = get_pitch_min_max(note_tracks)
+    if config["pitch_min"] != "auto":
+        pitch_min = int(config["pitch_min"])
+    if config["pitch_max"] != "auto":
+        pitch_max = int(config["pitch_max"])
+
+    if config["end_time"] == "auto":
+        end_time = get_maximum_time(note_tracks) + waiting_time_before_end
+    else:
+        end_time = float(config["end_time"])
+
+    current_note_indices = [
+        [0 for i in range(128)] for k in range(len(note_tracks))]
+    img_index = 0
+    dt = 1.0 / frame_rate
+    time = start_time
+    images = []
+    while time < end_time:
+        time_left = time - time_before_current
+        time_right = time + time_after_current
+
+        current_notes = []
+        for track_index, track in enumerate(note_tracks):
+            for pitch_index in range(128):
+                min_note_index = current_note_indices[track_index][pitch_index]
+                max_note_index = len(track[pitch_index])
+                for note_index in range(min_note_index, max_note_index):
+                    note = track[pitch_index][note_index]
+                    if note.end_time < time_left:
+                        current_note_indices[track_index][pitch_index] += 1
+                    elif note.start_time < time_right:
+                        current_notes.append(note)
+                    else:
+                        break
+
+        img = create_image(current_notes, time, time_left, time_right, time_before_current,
+                            time_after_current, pitch_min, pitch_max, config)
+
+        images.append(img)
+        # cv2.imwrite("./tmp_images/%08i.png" % img_index, img)
+        time += dt
+        img_index += 1
+        # print_progress("Current time:", time, end_time)
+    print("")
+
+    # size_x = int(config["size_x"])
+    # size_y = int(config["size_y"])
+    # run_ffmpeg(frame_rate, size_x, size_y)
+    return images
 
 
 def create_video(note_tracks, config):
@@ -379,10 +436,11 @@ def main():
 
     note_tracks, tempo_bpm, resolution = read_midi(config["midi_filename"])
     print(create_beatmap(note_tracks, config))
+    return create_beatmap(note_tracks, config)
 
     #for making the video
     # calculate_note_times(note_tracks, tempo_bpm, resolution)
-    # create_video(note_tracks, config)
+    # create_video2(note_tracks, config)
     # shutil.rmtree("./tmp_images")
 
 
