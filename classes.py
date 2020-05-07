@@ -3,7 +3,7 @@ import numpy as np
 import math
 
 import vlc
-from moviepy.editor import *
+#from moviepy.editor import *
 import sys
 
 from values import colors
@@ -29,6 +29,11 @@ METHOD                  = "default"
 x_r = 80
 
 FPS = 30
+# sounds = {
+#     "twinkle" : pygame.mixer.Sound("media/twinkle-twinkle.ogg") #,
+#     # "begin" : pygame.mixer.Sound("data/begin.ogg"),
+#     # "end"   : pygame.mixer.Sound("data/end.ogg")
+# }
 
 class Button:
     name = None
@@ -87,7 +92,12 @@ class App:
         # self.video = pygame.display.set_mode((self.width, self.height))
         # pygame.display.get_wm_info()
         pygame.display.set_caption('KaraokeHero')
-        pygame.mixer.quit()
+
+        pygame.mixer.init(buffer=128)
+        self.song = None
+        # pygame.mixer.quit()
+
+
 
     def quit(self):
         pygame.quit()
@@ -127,6 +137,7 @@ class App:
                         self.song_selection = "Hot Cross Buns"
                         # self.movie = './twinkle-twinkle.mp4' # TODO - fix
                         # self.movie = pygame.movie.Movie('./twinkle-twinkle.mp4')
+                        # self.song = 'media/twinkle-twinkle.ogg'
                         menu = False
                         break
                     elif quit.is_clicked(x, y):
@@ -256,6 +267,9 @@ class App:
         # movie.set_display(movie_screen)
         # movie.show()
 
+        #determine which audio to play
+        pygame.mixer.music.load(self.song)
+
         while play:
 
 
@@ -271,6 +285,9 @@ class App:
                     x, y = pygame.mouse.get_pos()
                     if quit.is_clicked(x, y):
                         self.shade_button(quit.x, quit.y, colors["dark red"], "QUIT")
+
+                        pygame.mixer.music.stop()
+                        pygame.mixer.music.unload()
                         # clip.close()
                         # movie.stop()
                         # sys.exit()
@@ -283,9 +300,10 @@ class App:
                         return True
                     elif start.is_clicked(x, y):
                         self.shade_button(start.x, start.y, colors["dark green"], "START")
-                        # start_song = True
-            # while start_song:
-                # reset EVERYTHING and REDRAW :))))))
+                        print("hit SONG START")
+                        pygame.mixer.music.play(start=0.0)
+
+            # clear everything and re-draw
             self.game_display.fill(colors["white"])
 
             menu = self.draw_button(25, 300, colors["red"], "MENU")
