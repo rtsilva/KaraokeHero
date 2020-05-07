@@ -10,7 +10,13 @@ import configparser
 
 import midi
 import note
+import pygame
 
+main_screen_w = 1500
+main_screen_h = 750
+
+beat_screen_w = 1000
+beat_screen_h = 300
 
 def is_note_on(event):
     """
@@ -112,6 +118,50 @@ def print_progress(msg, current, total):
     text = "\r" + msg + " {:9.1f}/{:.1f}".format(current, total)
     sys.stdout.write(text)
     sys.stdout.flush()
+
+
+def create_beatmap(note_tracks, config):
+    #SETUP
+    frame_rate = float(config["frame_rate"])
+    waiting_time_before_end = float(config["waiting_time_before_end"])
+    start_time = float(config["start_time"])
+    time_before_current = float(config["time_before_current"])
+    time_after_current = float(config["time_after_current"])
+    pitch_min, pitch_max = get_pitch_min_max(note_tracks)
+    if config["pitch_min"] != "auto":
+        pitch_min = int(config["pitch_min"])
+    if config["pitch_max"] != "auto":
+        pitch_max = int(config["pitch_max"])
+    if config["end_time"] == "auto":
+        end_time = get_maximum_time(note_tracks) + waiting_time_before_end
+    else:
+        end_time = float(config["end_time"])
+    note_tracks, tempo_bpm, resolution = read_midi(config["midi_filename"])
+    ############## end setup
+
+    
+    rowsNum = pitch_max - pitch_min + 1
+    #beatmap = [[] * rowsNum] #at each index/pitch, list of notes (rectangle object, length, time to be sung at) 
+    #self.rect = pygame.Rect(x, y, width, height)
+    rectHight = int( beat_screen_h/rowsNum )
+    rectWidth = 75 #however long the beat is
+    initX = beat_screen_w #start rectangle at the right of the beatmap screen
+    initY = 500 #beat_screen_h-beatRow*rectHight #start rectangle in the correct row
+
+    current_note_indices = [ [0 for i in range(128)] for k in range(len(note_tracks))]
+    beatmap = [] # list of tuples: (pygame.Rect, time to appear/be sung at)
+
+    #for every note in every track...
+    calculate_note_times(note_tracks, tempo_bpm, resolution)    
+    for track in note_tracks:
+        for pitch_list in track:
+            for note in pitch_list:
+                rectWidth = (note.end_time-note.start_time)*100 #scale/multiply by tempo
+                temp_rect = pygame.Rect(initX, initY, rectWidth, rectHight)
+                beatmap.append( (temp_rect, note.start_time) )
+    ##TODO LOOK AT create_image TO IMPROVE THE CODE TODO
+    return beatmap
+    
 
 
 def create_video(note_tracks, config):
@@ -300,9 +350,11 @@ def main():
     config = get_config(filename)["DEFAULT"]
 
     note_tracks, tempo_bpm, resolution = read_midi(config["midi_filename"])
-    calculate_note_times(note_tracks, tempo_bpm, resolution)
-    create_video(note_tracks, config)
-    shutil.rmtree("./tmp_images")
+    print(create_beatmap(note_tracks, config))
+
+    # calculate_note_times(note_tracks, tempo_bpm, resolution)
+    # create_video(note_tracks, config)
+    # shutil.rmtree("./tmp_images")
 
 
 if __name__ == '__main__':
