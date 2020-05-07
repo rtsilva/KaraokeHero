@@ -44,5 +44,8 @@ Libraries Used + Installation Requirements
 - ffmpeg (for mp4 making)
 	- brew install ffmpeg
 
+- moviepy
+	- pip install moviepy
+
 <!-- - python cocoa
 	- >>> pip install pycocoa -->
