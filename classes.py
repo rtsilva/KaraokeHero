@@ -131,7 +131,7 @@ class App:
                         self.shade_button(twinkle.x, twinkle.y, colors["dark blue"], "Twinkle Twinkle")
                         print("hit MENU TWINKLE")
                         self.song_selection = "Twinkle Twinkle"
-                        self.song = 'media/twinkle-twinkle.ogg'
+                        self.song = 'media/twinkle-twinkle2.ogg'
                         self.midi = "midi_filename_twinkle"
                         # self.movie = './twinkle-twinkle.mp4'
                         # self.movie = pygame.movie.Movie('./twinkle-twinkle.mp4')
@@ -141,7 +141,7 @@ class App:
                         print("hit MENU BUNS")
                         self.shade_button(buns.x, buns.y, colors["dark blue"], "Hot Cross Buns")
                         self.song_selection = "Hot Cross Buns"
-                        self.song = 'media/hot-cross-buns.ogg'
+                        self.song = 'media/hot-cross-bunsPNO.ogg'
                         self.midi = "midi_filename_buns"
                         # self.movie = './twinkle-twinkle.mp4' # TODO - fix
                         # self.movie = pygame.movie.Movie('./twinkle-twinkle.mp4')
@@ -361,7 +361,7 @@ class App:
             #self.song_visual(startTime)
             if self.start_song: #only while a song is playing
                 for rectangle, rectStart, rectEnd in self.rectangles: #update coords of rectangles
-                    rectangle.move_ip(-150, 0) #move to the left
+                    rectangle.move_ip(-100, 0) #move to the left
                     if rectangle.x >= beat_map_x and rectangle.x <= self.width - self.button_w*3:
                         active_rects.append( pygame.draw.rect(self.game_display, colors["red"], rectangle)
                         )
@@ -370,7 +370,7 @@ class App:
             #pygame.display.flip()
             pygame.display.update(active_rects)
             # pygame.display.update()
-            # pygame.time.delay(10)
+            pygame.time.delay(60)
 
             # movie.play()
             # Start movie playback
