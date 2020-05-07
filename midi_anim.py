@@ -157,11 +157,39 @@ def create_beatmap(note_tracks, config):
         for pitch_list in track:
             for note in pitch_list:
                 rectWidth = (note.end_time-note.start_time)*100 #scale/multiply by tempo
-                temp_rect = pygame.Rect(initX, initY, rectWidth, rectHight)
+                Y = get_note_Y(note, pitch_min, pitch_max, config)
+                temp_rect = pygame.Rect(initX, Y, rectWidth, rectHight)
                 beatmap.append( (temp_rect, note.start_time) )
     ##TODO LOOK AT create_image TO IMPROVE THE CODE TODO
     return beatmap
     
+def get_note_Y(note, pitch_min, pitch_max, config):
+    margin_y = int(config["margin_y"])
+    size_x = int(config["size_x"])
+    size_y = int(config["size_y"])
+    pixels_to_remove_from_notes_x = float(
+        config["pixels_to_remove_from_notes_x"])
+    pixels_to_remove_from_notes_y = float(
+        config["pixels_to_remove_from_notes_y"])
+
+    no_of_rows = pitch_max - pitch_min + 1
+    row_height = (size_y - 2.0 * margin_y) / no_of_rows
+    # pixels_per_second = size_x / (time_before_current + time_after_current)
+    note_height = int(
+        round(max(1, row_height - pixels_to_remove_from_notes_y)))
+    note_pos_y_offset = 0.5 * (row_height - note_height)
+
+    row_no = note.pitch - pitch_min
+    y_pos = int(round(size_y - margin_y - (row_no + 1)
+                        * row_height + note_pos_y_offset))
+    # x_pos = int(round((note.start_time - time_left) * pixels_per_second))
+    # x_length = int(round((note.end_time - note.start_time)
+    #                         * pixels_per_second - pixels_to_remove_from_notes_x))
+
+    # p1 = (x_pos, y_pos)
+    # p2 = (x_pos + x_length, y_pos + note_height)
+
+    return y_pos
 
 
 def create_video(note_tracks, config):
@@ -352,6 +380,7 @@ def main():
     note_tracks, tempo_bpm, resolution = read_midi(config["midi_filename"])
     print(create_beatmap(note_tracks, config))
 
+    #for making the video
     # calculate_note_times(note_tracks, tempo_bpm, resolution)
     # create_video(note_tracks, config)
     # shutil.rmtree("./tmp_images")
