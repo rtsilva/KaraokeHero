@@ -15,12 +15,6 @@ if __name__ == '__main__':
     # app.mainloop()
 
     app = App(1)
-    # midis = set([])
-    #
-    # while True:
-    #     res = max(app.get_user_audio(), 0)
-    #     midis.add(int(res%12))
-    #     print(midis)
     cont = True
     while cont:
         song = app.menu()
@@ -32,5 +26,3 @@ if __name__ == '__main__':
             if not res:
                 app.quit()
                 break
-
-    # fini = True

@@ -45,11 +45,8 @@ def extract_notes(filename):
             for i in range(event.tick+1):
                 if (event.name == NoteOn):
                     pitch = event.get_pitch()
-                    # normalize notes by removing octave (1 octave ok?)
+                    # normalize notes by removing octave
                     norm_pitch = pitch%12
-                    # for comparision purposes
-                    # print(midi2str(pitch))
-                    # print(midi2str(norm_pitch))
                     notes.append((norm_pitch, 1))
                     total += 1
                 elif (event.name == NoteOff):

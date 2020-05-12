@@ -3,6 +3,24 @@
 
 KaraokeHero is a interactive karaoke coach which allows users to see the notes of a song juxtaposed with their own voice in real time. Created in Python 3.6, only tested on macOS.
 
+In order to run the program, simply download all code, and in terminal, run the following:
+python main.py
+
+## Code Summary
+
+### Code Related to Final Edition
+main.py - instantiates application
+classes.py - defines application and class necessary helper classes and functions
+midi_anim.py - parses and extracts necessary information from a MIDI file
+\*.mid - MIDI files
+\*.mp4 - MP4 files
+media - contains ogg and mp3 versions of audio files
+output - holds mp4 version of animation (if relevant code is run)
+tmp_images - images used to create output's mp4
+
+### Code Related to Prior Iterations
+
+
 ## Libraries Used + Installation Requirements
 
 - python midi
