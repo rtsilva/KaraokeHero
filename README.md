@@ -10,30 +10,49 @@ python main.py
 
 ### Code Related to Final Edition
 
-main.py - instantiates application \n
-classes.py - defines application and calls necessary helper classes and functions \n
-midi_anim.py - parses and extracts necessary information from a MIDI file \n
-\*.mid - MIDI files \n
-\*.mp4 - MP4 files \n
-media - contains ogg and mp3 versions of audio files \n
-output - holds mp4 version of animation (if relevant code is run) \n
-tmp_images - images used to create output's mp4 \n
-options.cfg - defines values for midi_anim \n
+main.py - instantiates application
+
+classes.py - defines application and calls necessary helper classes and functions
+
+midi_anim.py - parses and extracts necessary information from a MIDI file
+
+\*.mid - MIDI files
+
+\*.mp4 - MP4 files
+
+media - contains ogg and mp3 versions of audio files
+
+output - holds mp4 version of animation (if relevant code is run)
+
+tmp_images - images used to create output's mp4
+
+options.cfg - defines values for midi_anim
+
 values.py - defines colors for UI
 
 ### Code Related to Prior Iterations
 
-app.py - defines the application utilizing tkinter format \n
-pages.py - defines pages of the application, calling necessary helper functions \n
-visualize_midi - extracts MIDI information and user audio to visualize the beatmap \n
-extract_midi.py - provides guidance on reading a MIDI file \n
-gen_midi.py - provides guidance on generating a MIDI file \n
-capture_audio.py/capture_audio_exp.py - provides guidance on audio manipulation \n
-note.py - defines a note to help with MIDI parsing \n
-names.py - defines variable names \n
-Screen.py - attempts to embed a vlc screen widget in tkinter \n
+app.py - defines the application utilizing tkinter format
+
+pages.py - defines pages of the application, calling necessary helper functions
+
+visualize_midi - extracts MIDI information and user audio to visualize the beatmap
+
+extract_midi.py - provides guidance on reading a MIDI file
+
+gen_midi.py - provides guidance on generating a MIDI file
+
+capture_audio.py/capture_audio_exp.py - provides guidance on audio manipulation
+
+note.py - defines a note to help with MIDI parsing
+
+names.py - defines variable names
+
+Screen.py - attempts to embed a vlc screen widget in tkinter
 
 ## Libraries Used + Installation Requirements
+
+In order to import necessary libraries, please dowload and install homebrew and pip. 
 
 - python midi
 	- `>>> pip install git+https://github.com/vishnubob/python-midi@feature/python3`
