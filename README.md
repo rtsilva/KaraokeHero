@@ -71,7 +71,7 @@ In order to import necessary libraries, please dowload and install homebrew and 
 	- `>>> pa.get_default_input_device_info()`
 	- `>>> pa.get_default_output_device_info()`
 
-- python tkinter \n
+- python tkinter
 	- this should already be installed, run the following to check:
 	- `>>> python -m tkinter`
 
