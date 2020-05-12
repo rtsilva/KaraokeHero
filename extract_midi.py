@@ -11,7 +11,7 @@ for track in pattern:
         print("Next Event")
         if (event.name == NoteOn):
             pitch = event.get_pitch()
-            # this is how loud the sound is, range (0, 127)
+            # this is how loud the sound is, in the range (0, 127)
             # velocity = event.data[1]
             print("Note:",midi2str(pitch))
         elif(event.name == NoteOff):
@@ -19,4 +19,3 @@ for track in pattern:
         elif(event.name == End):
             print("End of Event")
         print("Length of time:", event.tick)
-        
