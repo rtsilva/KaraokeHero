@@ -388,7 +388,7 @@ class App:
         # file.close()
         return
 
-    def song_visual(self, startTime): #lena
+    def song_visual(self, startTime):
         # play midi mp4 and twinkle-twinkle mp4, silence midi mp4 (files already converted, TODO)
         if self.start_song: #only while a song is playing
             now = pygame.time.get_ticks()
@@ -405,9 +405,6 @@ class App:
                 #TODO add rectangle.x and .y offset since the visual screen is smaller than the game screen
                 #self.game_display.blit(rectangle, (rectangle.x, rectangle.y))
                 pygame.draw.rect(self.game_display, colors["red"], rectangle)
-
-
-
 
 
     def song_audio_input(self): #renee
