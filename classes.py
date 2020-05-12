@@ -3,7 +3,6 @@ import numpy as np
 import math
 
 import vlc
-#from moviepy.editor import *
 import sys
 
 from values import colors
@@ -29,13 +28,12 @@ METHOD                  = "default"
 x_r = 80
 
 FPS = 30
-# sounds = {
-#     "twinkle" : pygame.mixer.Sound("media/twinkle-twinkle.ogg") #,
-#     # "begin" : pygame.mixer.Sound("data/begin.ogg"),
-#     # "end"   : pygame.mixer.Sound("data/end.ogg")
-# }
 
 class Button:
+    '''
+    This class creates a button folllowing the definition of a pygame rectangle, and includes
+    functionality pertaining to state of being clicked.
+    '''
     name = None
     x = None
     y = None
@@ -64,6 +62,10 @@ class Button:
         return "X: " +  str(self.x) + "\nY: " + str(self.y) + "\nWidth: " + str(self.width) + "\nHeight: "+ str(self.height)
 
 class App:
+    '''
+    This class creates shell for the KaraokeHero user interface and utilizes key methods and classes
+    to implement the program.
+    '''
     user_id = None
     game_display = None
     # video_display = None
@@ -86,19 +88,17 @@ class App:
     screen_w = 1500
     screen_h = 750
 
-    # FPS = 60
-
     def __init__(self, user_id):
         pygame.init()
         self.user_id = user_id
         self.font = pygame.font.SysFont('Arial', 25)
         self.game_display = pygame.display.set_mode((self.width, self.height))
+
+        pygame.display.set_caption('KaraokeHero')
+        pygame.mixer.init(buffer=128)
+
         # self.video = pygame.display.set_mode((self.width, self.height))
         # pygame.display.get_wm_info()
-        pygame.display.set_caption('KaraokeHero')
-
-        pygame.mixer.init(buffer=128)
-        # self.song = None
         # pygame.mixer.quit()
 
 
@@ -109,8 +109,10 @@ class App:
         sys.exit()
 
     def menu(self):
-        # display available songs and return selected song if song chosen
-        # else False (user has chosen to quit)
+        '''
+        Displays available songs and update selected song if song chosen, else returns
+        False (user has chosen to leave screen)
+        '''
         menu = True
         self.game_display.fill(colors["white"])
         pygame.display.set_caption('Select a Song')
@@ -155,6 +157,9 @@ class App:
         return self.song_selection
 
     def draw_button(self, x, y, color, name):
+        '''
+        Draws a rectangular button at (x, y) in a color with text (name) written on it in black.
+        '''
         button = Button(x, y, self.button_w, self.button_h, name)
         # positions are left, top, width, height
         # remember screen y goes from 0 to max, downwards
@@ -170,6 +175,9 @@ class App:
         return button
 
     def shade_button(self, x, y, color, name):
+        '''
+        Shades a rectangular button at (x, y) in a color with text (name) written on it in black.
+        '''
         # positions are left, top, width, height
         # remember screen y goes from 0 to max, downwards
         rect = pygame.draw.rect(self.game_display, color, (x, y, self.button_w, self.button_h))
@@ -222,11 +230,13 @@ class App:
 
         return midi
 
-    def play_song(self): #
-        # show lyric video, play song, capture audio
-        # return True if song finishes else False
-        # updates score
-        # clock = pygame.time.Clock()
+    def play_song(self):
+        '''
+        Displays beatmap and relevant screen components. If a user select start, begins the betamap and
+        related audio. If the user wishes to return to menu, returns True. If the user exits or quits, returns False.
+        Otherwise, continuously loops.
+        '''
+        # attempts at loading lyric video
 
         # Create instane of VLC and create reference to movie.
         # vlcInstance = vlc.Instance()
@@ -267,25 +277,21 @@ class App:
             pygame.draw.line(self.game_display, colors["white"], (beat_map_x, beat_map_y  + i), (beat_map_x + (self.width - self.button_w*3), beat_map_y  + i), 4)
         pygame.draw.line(self.game_display, colors["blue"], (beat_map_x + 50, beat_map_y), (beat_map_x + 50, beat_map_y + (self.height - self.button_h*2)), 4)
 
-        # user = pygame.draw.rect(self.game_display, colors["red"], (beat_map_x + 40, beat_map_y, 20, 20))
-
+        # further attempts at displaying lyric video
         # clip = VideoFileClip(self.movie)
         # pygame.display.update()
 
         # movie.set_display(movie_screen)
         # movie.show()
 
-        #determine which audio to play
+        # determine which audio to play
         print(self.midi)
         self.rectangles = midi_anim.main(self.midi)
-        # print(self.midi)
         pygame.mixer.music.load(self.song)
 
         startTime = -1
         pitches = set([])
         while self.is_playing:
-
-            # pygame.display.update()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -300,7 +306,7 @@ class App:
                         self.shade_button(quit.x, quit.y, colors["dark red"], "QUIT")
 
                         pygame.mixer.music.stop()
-                        #pygame.mixer.music.unload()
+                        # pygame.mixer.music.unload()
                         # clip.close()
                         # movie.stop()
                         # sys.exit()
@@ -312,7 +318,7 @@ class App:
                     elif menu.is_clicked(x, y):
                         self.shade_button(menu.x, menu.y, colors["dark red"], "MENU")
                         pygame.mixer.music.stop()
-                        #pygame.mixer.music.unload()
+                        # pygame.mixer.music.unload()
                         print("hit SONG MENU")
                         self.start_song = False
                         print(pitches)
@@ -320,7 +326,6 @@ class App:
                     elif start.is_clicked(x, y):
                         self.shade_button(start.x, start.y, colors["dark green"], "START")
                         print("hit SONG START")
-                        # self.rectangles = midi_anim.main()
                         pygame.mixer.music.play(start=0.0)
                         startTime = pygame.time.get_ticks()
                         self.start_song = True
@@ -328,10 +333,6 @@ class App:
             # clear everything and re-draw
             self.game_display.fill(colors["white"], (beat_map_x, 0 , self.width - beat_map_x, self.height))
 
-            # menu = self.draw_button(25, 300, colors["red"], "MENU")
-            # quit = self.draw_button(25, 500, colors["red"], "QUIT")
-            # start = self.draw_button(25, 100, colors["green"], "START")
-            #
             beat_map = pygame.draw.rect(self.game_display, colors["black"], (beat_map_x, beat_map_y , self.width - self.button_w*3, self.height - self.button_h*2))
             for i in range(0, self.height - self.button_h*2, 46):
                 pygame.draw.line(self.game_display, colors["white"], (beat_map_x, beat_map_y  + i), (beat_map_x + (self.width - self.button_w*3), beat_map_y  + i), 4)
@@ -343,22 +344,17 @@ class App:
             normalized_pitch = max(int(final_audio%13), 1)
 
             pitches.add(normalized_pitch)
-            # print(normalized_pitch)
 
-            # print(self.height - self.button_h*2)
             y_val = int((self.height - self.button_h*2)/normalized_pitch)
-            # print(beat_map_y + y_val)
-            # print("------------")
 
             active_rects = []
             active_rects.append( pygame.draw.rect(self.game_display, colors["red"], (beat_map_x + 50, beat_map_y + y_val, 20, 20))
             )
-            # pygame.draw.circle(self.game_display, colors["red"], (beat_map_x + 50, y_val), 15)
-            # user.move_ip(0, user.y - y_val)
 
 
-            #show beats on beatmap
-            #self.song_visual(startTime)
+            # show beats on beatmap
+            # gets current rectangles and their positions
+            # self.song_visual(startTime)
             if self.start_song: #only while a song is playing
                 for rectangle, rectStart, rectEnd in self.rectangles: #update coords of rectangles
                     rectangle.move_ip(-120, 0) #move to the left
@@ -366,10 +362,7 @@ class App:
                         active_rects.append( pygame.draw.rect(self.game_display, colors["blue"], rectangle)
                         )
 
-
-            #pygame.display.flip()
             pygame.display.update(active_rects)
-            # pygame.display.update()
             pygame.time.delay(120)
 
             # movie.play()

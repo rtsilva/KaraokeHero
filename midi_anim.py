@@ -1,4 +1,4 @@
-# code provided by MajorThird https://github.com/MajorThird/quick-midi-animation/blob/master/main.py
+# bulk of code provided by MajorThird https://github.com/MajorThird/quick-midi-animation/blob/master/main.py
 import numpy as np
 import cv2
 import subprocess

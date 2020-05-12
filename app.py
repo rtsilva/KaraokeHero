@@ -17,7 +17,6 @@ class KaraokeHeroApp(tk.Tk):
 
         tk.Tk.__init__(self, *args, **kwargs)
 
-        # tk.Tk.iconbitmap(self, default="clienticon.ico")
         tk.Tk.wm_title(self, "KaraokeHero")
 
         container = tk.Frame(self)

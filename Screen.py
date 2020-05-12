@@ -37,7 +37,7 @@ class Screen(Frame): # https://stackoverflow.com/questions/55197752/playing-vide
 
         # Mac Version (doesn't work)
         # self.player.set_nsobject(self.GetHandle())
-        # tragic https://github.com/oaubert/python-vlc/issues/91
+        # tragic: https://github.com/oaubert/python-vlc/issues/91
         # from ctypes import c_void_p, cdll
         # try:
         #     # libtk = cdll.LoadLibrary(ctypes.util.find_library('tk'))
