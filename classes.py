@@ -2,7 +2,7 @@ import pygame
 import numpy as np
 import math
 
-import vlc
+#import vlc
 import sys
 
 from values import colors

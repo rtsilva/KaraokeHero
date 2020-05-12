@@ -1,6 +1,6 @@
 # bulk of code provided by MajorThird https://github.com/MajorThird/quick-midi-animation/blob/master/main.py
 import numpy as np
-import cv2
+import cv2 #for create video, create image
 import subprocess
 import sys
 import shutil
